@@ -33,10 +33,8 @@ To make the process easier, the code also deploys SSM endpoints to connect to th
 
 ## Deployment Steps
 
-1. git clone <repository>
-2. cd autoscaling_pavm_egress
-3. terraform init
-4. terraform apply
+1. terraform init
+2. terraform apply
 
 ## Post Deployment Steps (Mandatory):
 
