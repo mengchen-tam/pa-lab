@@ -71,6 +71,12 @@ resource "aws_autoscaling_group" "myasg" {
     heartbeat_timeout      = 300
     lifecycle_transition   = "autoscaling:EC2_INSTANCE_LAUNCHING"
   }
+  initial_lifecycle_hook {
+    name                   = "terminate"
+    default_result         = "ABANDON"
+    heartbeat_timeout      = 300
+    lifecycle_transition   = "autoscaling:EC2_INSTANCE_TERMINATING"
+  }  
   launch_template {
     id      = aws_launch_template.tmpl.id
     version = "$Latest"
@@ -91,17 +97,6 @@ resource "aws_autoscaling_group" "myasg" {
     value = "pavm"
     propagate_at_launch = true
   }
-}
-
-resource "aws_autoscaling_lifecycle_hook" "terminate" {
-  name                   = "terminate"
-  autoscaling_group_name = aws_autoscaling_group.myasg.name
-  default_result         = "ABANDON"
-  heartbeat_timeout      = 300
-  lifecycle_transition   = "autoscaling:EC2_INSTANCE_TERMINATING"
-  depends_on = [
-    aws_autoscaling_group.myasg
-  ]
 }
 
 ### Scaling policies ###
