@@ -38,13 +38,16 @@ To make the process easier, the code also deploys SSM endpoints to connect to th
 
 ## Post Deployment Steps (Mandatory):
 
-`Note: Wait atleast 20-25 mins for the Palo Alto VM to bootstrap. Assign an elastic IP on to the instance Management Network Interface to access the Palo Alto VM via browser and ssh using the key name.`
+`Note: Wait atleast 20-25 mins for the Palo Alto VM to bootstrap.`
 
+#### 1. Assign EIP to the Management Interface of the Palo Alto VMs.
 
-#### 1. Assign admin user password to access the Palo Alto VM via web browser.
+ To access the Palo Alto VMs via SSH and Web Browser, assign an elastic IP on to the PAVM Management Network Interface.
+
+#### 2. Assign Admin user password to access the Palo Alto VM via web browser.
 
 ```
-ssh -i <KEY_NAME>.pem  admin@xxx
+ssh -i <KEY_NAME>.pem  admin@<EIP>
 
 admin@vmseries-fw1-poc> configure
 Entering configuration mode
@@ -68,9 +71,9 @@ Connection to xxx closed.
 
 ```
 
-#### 2. Configure a Management allowing “https” and Security Profile 
+#### 3. Configure a Management allowing “https” and Security Profile 
 
-Follow `Step-6` and `Step-7` from the below article to Configure a Management profile allowing “https” for GWLB target Group health checks to pass.
+Complete `Step-6` and `Step-7` from the below article to Configure a Management profile allowing “https” for GWLB Target Group Health Checks to pass and security profile allowing traffic. 
 
  https://docs.paloaltonetworks.com/vm-series/10-1/vm-series-deployment/set-up-the-vm-series-firewall-on-aws/vm-series-integration-with-gateway-load-balancer/integrate-the-vm-series-with-an-aws-gateway-load-balancer/manually-integrate-the-vm-series-with-a-gateway-load-balancer.  
 
@@ -79,9 +82,9 @@ Follow `Step-6` and `Step-7` from the below article to Configure a Management pr
 
 ![](./gwlb-hhtps-health-check-profile.png)
 
-Commit changes and you should see the GWLB target group health check pass and tra
+Commit changes and you should see the GWLB target group health check passing and should the traffic from the GWLB under the Monitor section of the firewalls.
 
-#### 3. Enable CloudWatch Metrics 
+#### 4. Enable CloudWatch Metrics 
 
 Follow the `Step-2` to enable cloud watch metrics on the Palo Alto VMs.
 
@@ -91,8 +94,8 @@ Commit changes in the Firewalls, and a custom namespace will be created with the
 
 ![](./cw_metrics.png)
 
-## Validate
+## Verify
 
-After successfull deployment, completing the pre requisites, post deployment steps and making sure the GWLB target group health checks are passing, login to the AWS console and connect the spoke-vm via SSM manager and execute curl "https://google.com", and you should see the traffic is routed to the Palo Alto instances. 
+After successfull deployment, completing the pre requisites, post deployment steps and making sure the GWLB target group health checks are passing, login to the AWS console and connect to anyone of the EC2 spoke-vm (spoke_vpc_vm_az1/2) via SSM manager and execute curl "https://google.com/", and you should see the traffic is routed to the Palo Alto instances.
 
 ![](./pavm_traffic_monitoring.png)
