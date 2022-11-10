@@ -40,13 +40,14 @@ To make the process easier, the code also deploys SSM endpoints to connect to th
 
 If the Palo Alto Market Place AMI is not subscribed, Terraform apply fails with similar error message as shown below. To fix the error, you should subscribe to the market place AMI by using the URL provided in the error message.
 
+```
 │ Error: creating Auto Scaling Group (myasg): ValidationError: You must use a valid fully-formed launch template. In order to use this AWS Marketplace product you need to accept terms and subscribe. To do so please visit https://aws.amazon.com/marketplace/pp?sku=xxx
 │ 	status code: 400, request id: 467395b0-325d-4127-a42b-8351cc7b8bce
 │ 
 │   with module.ec2_vpc.aws_autoscaling_group.myasg,
 │   on modules/aws_ec2_vpc/asg.tf line 59, in resource "aws_autoscaling_group" "myasg":
 │   59: resource "aws_autoscaling_group" "myasg" {
-
+```
 ## Post Deployment Steps (Mandatory):
 
 `Note: Wait atleast 20-25 mins for the Palo Alto VM to bootstrap.`
@@ -92,7 +93,7 @@ Complete `Step-6` and `Step-7` from the below article to Configure a Management 
 
 ![](./gwlb-hhtps-health-check-profile.png)
 
-Commit changes and you should see the GWLB target group health checks passing and the traffic from the GWLB under the Monitor section of the firewalls.
+Commit the changes and you should see the GWLB target group health checks passing and the traffic from the GWLB health checks under the Monitor section of the firewalls.
 
 ## 4. Enable CloudWatch Metrics 
 
