@@ -1,10 +1,11 @@
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 data "aws_availability_zones" "available" {
   state = "available"
   filter {
     name   = "zone-name"
-    values = ["us-east-1a","us-east-1b"]
+    values = ["${data.aws_region.current.name}a", "${data.aws_region.current.name}b"]
   }
 }
 data "aws_iam_policy_document" "lambda-assume-role-policy" {

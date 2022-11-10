@@ -2,7 +2,7 @@
 
 # Overview
 
-The terraform code in this pattern provisions an Egress Inspection VPC in AWS using the Gateway Load Balancer and the Autoscaling of the VM-Series Palo Alto Firewall instances. 
+The terraform code in this pattern provisions an Egress Inspection VPC in AWS using the Gateway Load Balancer and the Autoscaling of the VM-Series Palo Alto Firewall instances as shown in the architecture diagram.
 
 The Autoscaling group is configured with dynamic scaling policies using the CloudWatch metrics sent by the Palo Alto VMs.
 
@@ -22,19 +22,19 @@ To make the process easier, the code also deploys SSM endpoints to connect to th
 
 `Note: The purpose of this post is to demonstrate the AWS Autoscaling of the Palo Alto VM-Series firewalls with Dynamic Scaling Policies in the egress inspection vpc. Users should refer to the Palo Alto documentation while configuring resources per their recommendations and best practices.`
 
-
 # Architecture
 
 ![](./pavm_asg_arch.png)
 
 ## Pre Requisites
 
-1. Generate a key pair and provide the key name in the terraform.tfvars file on the key_name variable. 
+1. Generate a EC2 key pair, if you do not have one available to use.
 
 ## Deployment Steps
 
 1. terraform init
 2. terraform apply
+3. Input the EC2 Key Name and Palo Alto AMI ID 
 
 ## Troubleshooting 
 

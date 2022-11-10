@@ -87,10 +87,18 @@ resource "aws_instance" "spoke_vm" {
 ## SSM Endpoints for EC2 Connectivity ###
 
 resource "aws_vpc_endpoint" "spoke_vpc_ssm_ep" {
-  count             =  length(var.ssm_services) 
+  count             =  length([ 
+    "com.amazonaws.${data.aws_region.current.name}.ssm", 
+    "com.amazonaws.${data.aws_region.current.name}.ssmmessages", 
+    "com.amazonaws.${data.aws_region.current.name}.ec2messages" 
+    ]) 
   subnet_ids        = [for subnet in aws_subnet.app_subnet : subnet.id]
   vpc_endpoint_type = "Interface"
-  service_name = "${var.ssm_services[count.index]}"
+  service_name = "${[ 
+    "com.amazonaws.${data.aws_region.current.name}.ssm", 
+    "com.amazonaws.${data.aws_region.current.name}.ssmmessages", 
+    "com.amazonaws.${data.aws_region.current.name}.ec2messages" 
+    ][count.index]}"
   private_dns_enabled = true
   ip_address_type     = "ipv4"
   security_group_ids = [aws_security_group.ssm_ep.id]
