@@ -54,8 +54,6 @@ resource "aws_security_group" "data" {
   }
 }
 
-
-
 resource "aws_security_group" "spoke" {
   name        = "spoke_sg"
   description = "Spoke VPC - Security Group"
@@ -70,7 +68,7 @@ resource "aws_security_group" "spoke" {
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 443
     to_port     = 443
-    protocol    = "-1"
+    protocol    = "tcp"
   }
   tags = {
     "Name" = "spoke_sg"

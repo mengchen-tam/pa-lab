@@ -28,3 +28,28 @@ resource "aws_lambda_permission" "event_bridge" {
     aws_lambda_function.lambda,
   ]
 }
+
+resource "aws_cloudwatch_event_rule" "cw_rule" {
+  name          = "lambda_trigger"
+  description   = "Invoke Lambda"
+  event_pattern = <<EOF
+{
+  "source": [
+    "aws.autoscaling"
+  ],
+  "detail-type": [
+    "EC2 Instance-launch Lifecycle Action",
+    "EC2 Instance-terminate Lifecycle Action"
+  ]
+}
+EOF
+}
+
+resource "aws_cloudwatch_event_target" "cw_lambda_target" {
+  target_id = "InvokeLambdaAttachENI"
+  rule      = aws_cloudwatch_event_rule.cw_rule.name
+  arn       = aws_lambda_function.lambda.arn
+  depends_on = [
+    aws_cloudwatch_event_rule.cw_rule,
+  ]
+}

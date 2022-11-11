@@ -78,6 +78,7 @@ resource "aws_instance" "spoke_vm" {
   iam_instance_profile   = aws_iam_instance_profile.ssm_profile.name
   metadata_options {
     http_tokens = "required"
+    http_endpoint = "enabled"
   }
   tags = {
     "Name" = "spoke_vpc_vm_az${1 + count.index}"

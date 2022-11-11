@@ -30,34 +30,7 @@ resource "aws_launch_template" "tmpl" {
   }
 }
 
-resource "aws_cloudwatch_event_rule" "cw_rule" {
-  name          = "lambda_trigger"
-  description   = "Invoke Lambda"
-  event_pattern = <<EOF
-{
-  "source": [
-    "aws.autoscaling"
-  ],
-  "detail-type": [
-    "EC2 Instance-launch Lifecycle Action",
-    "EC2 Instance-terminate Lifecycle Action"
-  ]
-}
-EOF
-}
-
-
-resource "aws_cloudwatch_event_target" "cw_lambda_target" {
-  target_id = "InvokeLambdaAttachENI"
-  rule      = aws_cloudwatch_event_rule.cw_rule.name
-  arn       = aws_lambda_function.lambda.arn
-  depends_on = [
-    aws_cloudwatch_event_rule.cw_rule
-  ]
-}
-
-# EC2 TERMINATION LIFECYCLE HOOK
-
+## PAVM: ASG ##
 
 resource "aws_autoscaling_group" "myasg" {
   name                      = "myasg"
@@ -67,7 +40,6 @@ resource "aws_autoscaling_group" "myasg" {
   health_check_type         = "EC2"
   force_delete              = true
   target_group_arns         = [aws_lb_target_group.gwlb_tg.arn]
-
   initial_lifecycle_hook {
     name                 = "launch"
     default_result       = "ABANDON"
@@ -93,7 +65,8 @@ resource "aws_autoscaling_group" "myasg" {
     aws_lb_target_group.gwlb_tg,
     aws_cloudwatch_event_rule.cw_rule,
     aws_lambda_function.lambda,
-    aws_lambda_permission.event_bridge
+    aws_lambda_permission.event_bridge,
+    aws_cloudwatch_event_target.cw_lambda_target
   ]
   tag {
     key                 = "Name"
@@ -102,7 +75,7 @@ resource "aws_autoscaling_group" "myasg" {
   }
 }
 
-### Scaling policies ###
+### PAVM: ASG Scaling Policies ###
 
 resource "aws_autoscaling_policy" "panSessionUtilization" {
   autoscaling_group_name = aws_autoscaling_group.myasg.name
