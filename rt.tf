@@ -2,7 +2,7 @@
 
 resource "aws_route_table" "data_subnet_rtb" {
   vpc_id = aws_vpc.vpc.id
-  route = []
+  route  = []
   tags = {
     "Name" = "data_subnet_rtb"
   }
@@ -68,17 +68,17 @@ resource "aws_ec2_transit_gateway_route_table_association" "spoke_assoc" {
 resource "aws_route_table" "tgw_attach_subnet_az1" {
   vpc_id = aws_vpc.vpc.id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block      = "0.0.0.0/0"
     vpc_endpoint_id = aws_vpc_endpoint.gwlb_ep.*.id[0]
   }
   tags = {
     "Name" = "tgw_attach_subnet_rtb_az1"
   }
-} 
+}
 
 
 resource "aws_route_table_association" "tgw_attach_subnet_rt_az1" {
-  count = length([for subnet in aws_subnet.tgw_attach_subnet : subnet.id])  
+  count          = length([for subnet in aws_subnet.tgw_attach_subnet : subnet.id])
   subnet_id      = sort(aws_subnet.tgw_attach_subnet.*.id)[0]
   route_table_id = aws_route_table.tgw_attach_subnet_az1.id
 }
@@ -87,7 +87,7 @@ resource "aws_route_table_association" "tgw_attach_subnet_rt_az1" {
 resource "aws_route_table" "tgw_attach_subnet_az2" {
   vpc_id = aws_vpc.vpc.id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block      = "0.0.0.0/0"
     vpc_endpoint_id = aws_vpc_endpoint.gwlb_ep.*.id[1]
   }
   tags = {
@@ -96,7 +96,7 @@ resource "aws_route_table" "tgw_attach_subnet_az2" {
 }
 
 resource "aws_route_table_association" "tgw_attach_subnet_rt_az2" {
-  count =  length([for subnet in aws_subnet.tgw_attach_subnet : subnet.id]) 
+  count          = length([for subnet in aws_subnet.tgw_attach_subnet : subnet.id])
   subnet_id      = sort(aws_subnet.tgw_attach_subnet.*.id)[1]
   route_table_id = aws_route_table.tgw_attach_subnet_az2.id
 }
@@ -109,17 +109,17 @@ resource "aws_route_table_association" "tgw_attach_subnet_rt_az2" {
 resource "aws_route_table" "gwlb_subnet_az1" {
   vpc_id = aws_vpc.vpc.id
   route {
-    cidr_block = aws_vpc.spoke_vpc.cidr_block
+    cidr_block         = aws_vpc.spoke_vpc.cidr_block
     transit_gateway_id = aws_ec2_transit_gateway.tgw.id
   }
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[0]
   }
   tags = {
     "Name" = "gwlb_subnet_rtb_az1"
   }
-} 
+}
 
 
 resource "aws_route_table_association" "gwlb_subnet_rt_az1" {
@@ -132,11 +132,11 @@ resource "aws_route_table_association" "gwlb_subnet_rt_az1" {
 resource "aws_route_table" "gwlb_subnet_az2" {
   vpc_id = aws_vpc.vpc.id
   route {
-    cidr_block = aws_vpc.spoke_vpc.cidr_block
+    cidr_block         = aws_vpc.spoke_vpc.cidr_block
     transit_gateway_id = aws_ec2_transit_gateway.tgw.id
   }
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[1]
   }
   tags = {
@@ -161,23 +161,23 @@ resource "aws_route_table" "ngw_subnet" {
 }
 
 resource "aws_route" "r1" {
-  route_table_id            = aws_route_table.ngw_subnet.id
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id = aws_internet_gateway.igw.id
-  depends_on                = [aws_route_table.ngw_subnet]
+  route_table_id         = aws_route_table.ngw_subnet.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+  depends_on             = [aws_route_table.ngw_subnet]
 }
 
 resource "aws_route" "r2" {
-  count =   length(aws_subnet.app_subnet.*.id) 
-  route_table_id            = aws_route_table.ngw_subnet.id
-  destination_cidr_block    = sort(aws_subnet.app_subnet.*.cidr_block)[count.index]
-  vpc_endpoint_id = aws_vpc_endpoint.gwlb_ep.*.id[count.index]
-  depends_on                = [aws_route_table.ngw_subnet]
+  count                  = length(aws_subnet.app_subnet.*.id)
+  route_table_id         = aws_route_table.ngw_subnet.id
+  destination_cidr_block = sort(aws_subnet.app_subnet.*.cidr_block)[count.index]
+  vpc_endpoint_id        = aws_vpc_endpoint.gwlb_ep.*.id[count.index]
+  depends_on             = [aws_route_table.ngw_subnet]
 }
 
 
 resource "aws_route_table_association" "ngw_subnet_rt" {
-  count = length(aws_subnet.pavm_mgmt_subnet.*.id) 
+  count          = length(aws_subnet.pavm_mgmt_subnet.*.id)
   subnet_id      = aws_subnet.pavm_mgmt_subnet[count.index].id
   route_table_id = aws_route_table.ngw_subnet.id
 }

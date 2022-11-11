@@ -4,7 +4,7 @@ resource "aws_lb" "gwlb" {
   load_balancer_type = "gateway"
   subnets            = [for subnet in aws_subnet.gwlb_subnet : subnet.id]
 
-  enable_deletion_protection = false
+  enable_deletion_protection       = false
   enable_cross_zone_load_balancing = true
 
   tags = {
@@ -21,7 +21,7 @@ resource "aws_lb_target_group" "gwlb_tg" {
   health_check {
     port     = 443
     protocol = "HTTPS"
-    path = "/php/login.php"
+    path     = "/php/login.php"
   }
 }
 
@@ -46,12 +46,12 @@ resource "aws_vpc_endpoint_service" "gwlb_ep_svc" {
 }
 
 resource "aws_vpc_endpoint" "gwlb_ep" {
-  count             =  length(aws_subnet.gwlb_subnet.*.id) 
+  count             = length(aws_subnet.gwlb_subnet.*.id)
   service_name      = aws_vpc_endpoint_service.gwlb_ep_svc.service_name
   subnet_ids        = [aws_subnet.gwlb_subnet[count.index].id]
   vpc_endpoint_type = aws_vpc_endpoint_service.gwlb_ep_svc.service_type
   vpc_id            = aws_vpc.vpc.id
   tags = {
-    "Name" = "gwlb_endpoint_az${1+ count.index}"
+    "Name" = "gwlb_endpoint_az${1 + count.index}"
   }
 }

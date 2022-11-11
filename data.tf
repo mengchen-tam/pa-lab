@@ -15,68 +15,70 @@ data "aws_iam_policy_document" "lambda-assume-role-policy" {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com"]
     }
-  }  
+  }
 }
 
 data "aws_iam_policy_document" "lambda_policy" {
   statement {
     sid = "AllowActions"
     actions = [
-          "ec2:CreateNetworkInterface",
-          "ec2:DetachNetworkInterface",
-          "autoscaling:CompleteLifecycleAction",
-          "ec2:ModifyNetworkInterfaceAttribute",
-          "ec2:DeleteNetworkInterface",
-          "autoscaling:PutLifecycleHook",
-          "autoscaling:DetachLoadBalancerTargetGroups",
-          "ec2:AttachNetworkInterface",
-          "autoscaling:TerminateInstanceInAutoScalingGroup",
-          "autoscaling:AttachLoadBalancerTargetGroups",
-          "ec2:DeleteTags",
-          "ec2:CreateTags",
-          "ec2:*",
-          "autoscaling:*",
-      ]
+      "ec2:CreateNetworkInterface",
+      "ec2:DetachNetworkInterface",
+      "autoscaling:CompleteLifecycleAction",
+      "ec2:ModifyNetworkInterfaceAttribute",
+      "ec2:DeleteNetworkInterface",
+      "autoscaling:PutLifecycleHook",
+      "autoscaling:DetachLoadBalancerTargetGroups",
+      "ec2:AttachNetworkInterface",
+      "autoscaling:TerminateInstanceInAutoScalingGroup",
+      "autoscaling:AttachLoadBalancerTargetGroups",
+      "ec2:DeleteTags",
+      "ec2:CreateTags",
+    ]
     resources = [
       "arn:aws:autoscaling:*:${data.aws_caller_identity.current.account_id}:autoScalingGroup:*:autoScalingGroupName/*",
       "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
       "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:network-interface/*",
       "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*"      
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*"
     ]
   }
   statement {
     sid = "AllowActionsLogs"
     actions = [
-        "logs:*"
-      ]
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams"
+
+    ]
     resources = [
-      "arn:aws:logs:*:*:*"
+      "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*"
     ]
   }
   statement {
     sid = "DescribeActions"
     actions = [
-          "ec2:DescribeInstances",
-          "ec2:DescribeNetworkInterfaces",
-          "ec2:DescribeAvailabilityZones",
-          "ec2:DescribeNetworkInterfaceAttribute",
-          "ec2:DescribeSubnets",
-          "ec2:DescribeSecurityGroups",
-          "ec2:DescribeSecurityGroupRules",
-          "ec2:DescribeTags"
-      ]
+      "ec2:DescribeInstances",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DescribeAvailabilityZones",
+      "ec2:DescribeNetworkInterfaceAttribute",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSecurityGroupRules",
+      "ec2:DescribeTags"
+    ]
     resources = [
       "*"
     ]
-  }    
+  }
 }
 
 data "archive_file" "lambda" {
-  type = "zip"
-  source_file = "${path.module}/scripts/lambda_function.py"
+  type             = "zip"
+  source_file      = "${path.module}/scripts/lambda_function.py"
   output_file_mode = "0666"
-  output_path = "${path.module}/scripts/lambda_function.zip"
+  output_path      = "${path.module}/scripts/lambda_function.zip"
 }
 
 data "aws_iam_policy_document" "ssm_ec2" {
@@ -94,12 +96,12 @@ data "aws_iam_policy_document" "pavm_cw_metric_pol" {
   statement {
     sid = "AllowCWMetrics"
     actions = [
-        "cloudwatch:PutMetricData"
-      ]
+      "cloudwatch:PutMetricData"
+    ]
     resources = [
       "*"
     ]
-  }  
+  }
 }
 data "aws_iam_policy_document" "pavm_assume_pol" {
   statement {
@@ -108,7 +110,7 @@ data "aws_iam_policy_document" "pavm_assume_pol" {
       type        = "Service"
       identifiers = ["ec2.amazonaws.com"]
     }
-  }  
+  }
 }
 
 data "http" "ip" {
