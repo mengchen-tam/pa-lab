@@ -50,7 +50,6 @@ data "aws_iam_policy_document" "lambda_policy" {
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "logs:DescribeLogStreams"
-
     ]
     resources = [
       "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*"
