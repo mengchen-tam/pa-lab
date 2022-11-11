@@ -50,13 +50,13 @@ If the Palo Alto Market Place AMI is not subscribed, Terraform apply fails with 
 ```
 ## Post Deployment Steps (Mandatory):
 
-`Note: Wait atleast 20-25 mins for the Palo Alto VM to bootstrap.`
+`Note: Wait atleast 20-25 mins for the Palo Alto VMs to bootstrap.`
 
 ## 1. Assign EIP to the Management Interface of the Palo Alto VMs.
 
  To access the Palo Alto VMs via SSH and Web Browser, assign an elastic IP on to the PAVM Management Network Interface.
 
-## 2. Assign Admin user password to access the Palo Alto VM via web browser.
+## 2. Assign Admin user password to access the Palo Alto VMs.
 
 ```
 ssh -i <KEY_NAME>.pem  admin@<EIP>
