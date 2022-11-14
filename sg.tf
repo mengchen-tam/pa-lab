@@ -43,6 +43,12 @@ resource "aws_security_group" "data" {
     to_port     = 0
     protocol    = "-1"
   }
+  ingress {
+    cidr_blocks = ["${var.inspection_vpc_cidr_block}"]
+    from_port   = 6081
+    to_port     = 6081
+    protocol    = "UDP"
+  }  
   egress {
     cidr_blocks = ["${var.inspection_vpc_cidr_block}"]
     from_port   = 0

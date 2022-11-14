@@ -1,18 +1,21 @@
 ### Route Tables ###
 
-resource "aws_route_table" "data_subnet_rtb" {
-  vpc_id = aws_vpc.vpc.id
-  route  = []
-  tags = {
-    "Name" = "data_subnet_rtb"
-  }
-}
+# resource "aws_route_table" "gwlbe_subnet_rtb" {
+#   vpc_id = aws_vpc.vpc.id
+#   route {
+#     cidr_block         = aws_vpc.spoke_vpc.cidr_block
+#     transit_gateway_id = aws_ec2_transit_gateway.tgw.id
+#   }
+#   tags = {
+#     "Name" = "gwlbe_subnet_rtb"
+#   }
+# }
 
-resource "aws_route_table_association" "data_rt_assoc" {
-  count          = length(aws_subnet.data_subnet.*.id)
-  subnet_id      = aws_subnet.data_subnet[count.index].id
-  route_table_id = aws_route_table.data_subnet_rtb.id
-}
+# resource "aws_route_table_association" "data_rt_assoc" {
+#   count          = length(aws_subnet.gwlb_subnet.*.id)
+#   subnet_id      = aws_subnet.gwlb_subnet[count.index].id
+#   route_table_id = aws_route_table.gwlbe_subnet_rtb.id
+# }
 
 ### TGW Route Table and Assoc. ###
 
@@ -106,7 +109,7 @@ resource "aws_route_table_association" "tgw_attach_subnet_rt_az2" {
 
 
 
-resource "aws_route_table" "gwlb_subnet_az1" {
+resource "aws_route_table" "data_subnet_az1" {
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block         = aws_vpc.spoke_vpc.cidr_block
@@ -117,19 +120,19 @@ resource "aws_route_table" "gwlb_subnet_az1" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[0]
   }
   tags = {
-    "Name" = "gwlb_subnet_rtb_az1"
+    "Name" = "data_subnet_rtb_az1"
   }
 }
 
 
-resource "aws_route_table_association" "gwlb_subnet_rt_az1" {
-  subnet_id      = aws_subnet.gwlb_subnet.*.id[0]
-  route_table_id = aws_route_table.gwlb_subnet_az1.id
+resource "aws_route_table_association" "data_subnet_rt_az1" {
+  subnet_id      = aws_subnet.data_subnet.*.id[0]
+  route_table_id = aws_route_table.data_subnet_az1.id
 }
 
 
 
-resource "aws_route_table" "gwlb_subnet_az2" {
+resource "aws_route_table" "data_subnet_az2" {
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block         = aws_vpc.spoke_vpc.cidr_block
@@ -140,13 +143,13 @@ resource "aws_route_table" "gwlb_subnet_az2" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[1]
   }
   tags = {
-    "Name" = "gwlb_subnet_rtb_az2"
+    "Name" = "data_subnet_rtb_az2"
   }
 }
 
-resource "aws_route_table_association" "gwlb_subnet_rt_az2" {
-  subnet_id      = aws_subnet.gwlb_subnet.*.id[1]
-  route_table_id = aws_route_table.gwlb_subnet_az2.id
+resource "aws_route_table_association" "data_subnet_rt_az2" {
+  subnet_id      = aws_subnet.data_subnet.*.id[1]
+  route_table_id = aws_route_table.data_subnet_az2.id
 }
 
 

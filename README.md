@@ -24,7 +24,7 @@ To make the process easier, the code also deploys SSM endpoints to connect to th
 
 # Architecture
 
-![](./pavm_asg_arch.png)
+![](./pa_asg_gwlb.jpg)
 
 ## Pre Requisites
 

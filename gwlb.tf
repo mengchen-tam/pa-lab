@@ -2,7 +2,7 @@ resource "aws_lb" "gwlb" {
   name               = "gwlb"
   internal           = false
   load_balancer_type = "gateway"
-  subnets            = [for subnet in aws_subnet.gwlb_subnet : subnet.id]
+  subnets            = [for subnet in aws_subnet.data_subnet : subnet.id]
 
   enable_deletion_protection       = false
   enable_cross_zone_load_balancing = true
@@ -46,9 +46,9 @@ resource "aws_vpc_endpoint_service" "gwlb_ep_svc" {
 }
 
 resource "aws_vpc_endpoint" "gwlb_ep" {
-  count             = length(aws_subnet.gwlb_subnet.*.id)
+  count             = length(aws_subnet.data_subnet.*.id)
   service_name      = aws_vpc_endpoint_service.gwlb_ep_svc.service_name
-  subnet_ids        = [aws_subnet.gwlb_subnet[count.index].id]
+  subnet_ids        = [aws_subnet.data_subnet[count.index].id]
   vpc_endpoint_type = aws_vpc_endpoint_service.gwlb_ep_svc.service_type
   vpc_id            = aws_vpc.vpc.id
   tags = {
