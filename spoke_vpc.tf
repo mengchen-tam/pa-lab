@@ -77,7 +77,7 @@ resource "aws_instance" "spoke_vm" {
   subnet_id              = aws_subnet.app_subnet[count.index].id
   iam_instance_profile   = aws_iam_instance_profile.ssm_profile.name
   metadata_options {
-    http_tokens = "required"
+    http_tokens   = "required"
     http_endpoint = "enabled"
   }
   tags = {
