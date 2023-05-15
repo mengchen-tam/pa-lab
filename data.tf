@@ -36,11 +36,11 @@ data "aws_iam_policy_document" "lambda_policy" {
       "ec2:CreateTags",
     ]
     resources = [
-      "arn:aws:autoscaling:*:${data.aws_caller_identity.current.account_id}:autoScalingGroup:*:autoScalingGroupName/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:network-interface/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*"
+      "arn:aws-cn:autoscaling:*:${data.aws_caller_identity.current.account_id}:autoScalingGroup:*:autoScalingGroupName/*",
+      "arn:aws-cn:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
+      "arn:aws-cn:ec2:*:${data.aws_caller_identity.current.account_id}:network-interface/*",
+      "arn:aws-cn:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*",
+      "arn:aws-cn:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*"
     ]
   }
   statement {
@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "lambda_policy" {
       "logs:DescribeLogStreams"
     ]
     resources = [
-      "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*"
+      "arn:aws-cn:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*"
     ]
   }
   statement {
