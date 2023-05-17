@@ -36,7 +36,7 @@ terraform.rc
 .terraform.lock.hcl
 .terraform/
 README.html
-scripts/init_configuration
+#scripts/init_configuration
 scripts/lambda_function.zip
 terraform.tfstate
 terraform.tfstate.backup

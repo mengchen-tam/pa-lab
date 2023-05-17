@@ -1,0 +1,37 @@
+set cli config-output-format set
+configure
+set deviceconfig plugins vm_series aws-cloudwatch enabled yes
+set network profiles interface-management-profile allow_gwlb_heathcheck https yes
+set import network interface ethernet1/1
+set network virtual-router default interface ethernet1/1
+set zone newzone network layer3 ethernet1/1
+set network interface ethernet ethernet1/1 layer3 interface-management-profile allow_gwlb_heathcheck
+set network interface ethernet ethernet1/1 layer3 dhcp-client
+
+set rulebase security rules new_rule_1 to newzone
+set rulebase security rules new_rule_1 from newzone
+set rulebase security rules new_rule_1 source any
+set rulebase security rules new_rule_1 destination any
+set rulebase security rules new_rule_1 source-user any
+set rulebase security rules new_rule_1 category any
+set rulebase security rules new_rule_1 application [ icmp ping ssl web-browsing ]
+set rulebase security rules new_rule_1 service application-default
+set rulebase security rules new_rule_1 source-hip any
+set rulebase security rules new_rule_1 destination-hip any
+set rulebase security rules new_rule_1 action allow
+set rulebase security rules new_rule_1 description new_rule_1
+
+set rulebase security rules deny_all to any
+set rulebase security rules deny_all from any
+set rulebase security rules deny_all source any
+set rulebase security rules deny_all destination any
+set rulebase security rules deny_all source-user any
+set rulebase security rules deny_all category any
+set rulebase security rules deny_all application any
+set rulebase security rules deny_all service application-default
+set rulebase security rules deny_all source-hip any
+set rulebase security rules deny_all destination-hip any
+set rulebase security rules deny_all action deny
+set rulebase security rules deny_all description deny_all
+
+
