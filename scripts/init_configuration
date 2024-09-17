@@ -1,3 +1,4 @@
+#复制到PA CLI里，遇到报错可以复制2次。
 set cli config-output-format set
 configure
 set deviceconfig plugins vm_series aws-cloudwatch enabled yes
