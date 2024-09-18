@@ -80,16 +80,16 @@ data "aws_availability_zones" "available" {
 #   output_path      = "${path.module}/scripts/lambda_function.zip"
 # }
 
-# data "aws_iam_policy_document" "ssm_ec2" {
-#   statement {
-#     actions = ["sts:AssumeRole"]
+data "aws_iam_policy_document" "ssm_ec2" {
+  statement {
+    actions = ["sts:AssumeRole"]
 
-#     principals {
-#       type        = "Service"
-#       identifiers = ["ec2.amazonaws.com"]
-#     }
-#   }
-# }
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
 
 # data "aws_iam_policy_document" "pavm_cw_metric_pol" {
 #   statement {
