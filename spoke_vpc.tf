@@ -39,10 +39,10 @@ resource "aws_subnet" "app_tgw_subnet" {
 
 resource "aws_route_table" "spoke_vpc_subnets_rt" {
   vpc_id = aws_vpc.spoke_vpc.id
-  route {
-    cidr_block         = "0.0.0.0/0"
-    transit_gateway_id = aws_ec2_transit_gateway.tgw.id
-  }
+  # route {
+  #   cidr_block         = "0.0.0.0/0"
+  #   transit_gateway_id = aws_ec2_transit_gateway.tgw.id
+  # }
   tags = {
     "Name" = "spoke_vpc_subnet_rtb"
   }

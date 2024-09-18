@@ -67,13 +67,13 @@ resource "aws_ec2_transit_gateway_route_table_association" "spoke_assoc" {
 
 
 #### TGW Attach Subnet Routes - Inspection VPC ####
-
+#remove
 resource "aws_route_table" "tgw_attach_subnet_az1" {
   vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block      = "0.0.0.0/0"
-    vpc_endpoint_id = aws_vpc_endpoint.gwlb_ep.*.id[0]
-  }
+  # route {
+  #   cidr_block      = "0.0.0.0/0"
+  #   vpc_endpoint_id = aws_vpc_endpoint.gwlb_ep.*.id[0]
+  # }
   tags = {
     "Name" = "tgw_attach_subnet_rtb_az1"
   }
@@ -86,13 +86,12 @@ resource "aws_route_table_association" "tgw_attach_subnet_rt_az1" {
   route_table_id = aws_route_table.tgw_attach_subnet_az1.id
 }
 
-
 resource "aws_route_table" "tgw_attach_subnet_az2" {
   vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block      = "0.0.0.0/0"
-    vpc_endpoint_id = aws_vpc_endpoint.gwlb_ep.*.id[1]
-  }
+  # route {
+  #   cidr_block      = "0.0.0.0/0"
+  #   vpc_endpoint_id = aws_vpc_endpoint.gwlb_ep.*.id[1]
+  # }
   tags = {
     "Name" = "tgw_attach_subnet_rtb_az2"
   }
@@ -111,14 +110,14 @@ resource "aws_route_table_association" "tgw_attach_subnet_rt_az2" {
 
 resource "aws_route_table" "data_subnet_az1" {
   vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block         = aws_vpc.spoke_vpc.cidr_block
-    transit_gateway_id = aws_ec2_transit_gateway.tgw.id
-  }
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[0]
-  }
+  # route {
+  #   cidr_block         = aws_vpc.spoke_vpc.cidr_block
+  #   transit_gateway_id = aws_ec2_transit_gateway.tgw.id
+  # }
+  # route {
+  #   cidr_block     = "0.0.0.0/0"
+  #   nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[0]
+  # }
   tags = {
     "Name" = "data_subnet_rtb_az1"
   }
@@ -134,14 +133,14 @@ resource "aws_route_table_association" "data_subnet_rt_az1" {
 
 resource "aws_route_table" "data_subnet_az2" {
   vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block         = aws_vpc.spoke_vpc.cidr_block
-    transit_gateway_id = aws_ec2_transit_gateway.tgw.id
-  }
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[1]
-  }
+  # route {
+  #   cidr_block         = aws_vpc.spoke_vpc.cidr_block
+  #   transit_gateway_id = aws_ec2_transit_gateway.tgw.id
+  # }
+  # route {
+  #   cidr_block     = "0.0.0.0/0"
+  #   nat_gateway_id = aws_nat_gateway.nat_gateway.*.id[1]
+  # }
   tags = {
     "Name" = "data_subnet_rtb_az2"
   }
@@ -170,13 +169,13 @@ resource "aws_route" "r1" {
   depends_on             = [aws_route_table.ngw_subnet]
 }
 
-resource "aws_route" "r2" {
-  count                  = length(aws_subnet.app_subnet.*.id)
-  route_table_id         = aws_route_table.ngw_subnet.id
-  destination_cidr_block = sort(aws_subnet.app_subnet.*.cidr_block)[count.index]
-  vpc_endpoint_id        = aws_vpc_endpoint.gwlb_ep.*.id[count.index]
-  depends_on             = [aws_route_table.ngw_subnet]
-}
+# resource "aws_route" "r2" {
+#   count                  = length(aws_subnet.app_subnet.*.id)
+#   route_table_id         = aws_route_table.ngw_subnet.id
+#   destination_cidr_block = sort(aws_subnet.app_subnet.*.cidr_block)[count.index]
+#   vpc_endpoint_id        = aws_vpc_endpoint.gwlb_ep.*.id[count.index]
+#   depends_on             = [aws_route_table.ngw_subnet]
+# }
 
 
 resource "aws_route_table_association" "ngw_subnet_rt" {
