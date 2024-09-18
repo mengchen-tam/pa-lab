@@ -14,16 +14,16 @@
 #   managed_policy_arns = [aws_iam_policy.lambda_policy.arn]
 # }
 
-# resource "aws_iam_role" "ssm_role" {
-#   name                = "ssm_role"
-#   assume_role_policy  = data.aws_iam_policy_document.ssm_ec2.json
-#   managed_policy_arns = ["arn:aws-cn:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws-cn:iam::aws:policy/AmazonSSMManagedInstanceCore"]
-# }
+resource "aws_iam_role" "ssm_role" {
+  name                = "ssm_role"
+  assume_role_policy  = data.aws_iam_policy_document.ssm_ec2.json
+  managed_policy_arns = ["arn:aws-cn:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws-cn:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+}
 
-# resource "aws_iam_instance_profile" "ssm_profile" {
-#   name = "spoke_ssm_profile"
-#   role = aws_iam_role.ssm_role.name
-# }
+resource "aws_iam_instance_profile" "ssm_profile" {
+  name = "spoke_ssm_profile"
+  role = aws_iam_role.ssm_role.name
+}
 
 # ### PAVM IAM ROLE ###
 

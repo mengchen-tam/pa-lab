@@ -69,7 +69,7 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_eip" "ngw_eip" {
   count = length(aws_subnet.pavm_mgmt_subnet.*.id)
-  vpc   = true
+  domain = "vpc"
 }
 
 resource "aws_nat_gateway" "nat_gateway" {

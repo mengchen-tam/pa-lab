@@ -6,9 +6,9 @@ resource "aws_launch_template" "tmpl" {
   instance_type = "m5.large"
   key_name      = var.key_name
   user_data     = filebase64("${path.module}/scripts/userdata.sh")
-  iam_instance_profile {
-    name = aws_iam_instance_profile.pavm_cw_profile.name
-  }
+  # iam_instance_profile {
+  #   name = aws_iam_instance_profile.pavm_cw_profile.name
+  # }
   network_interfaces {
     associate_public_ip_address = false
     device_index                = 0
@@ -63,10 +63,10 @@ resource "aws_autoscaling_group" "myasg" {
   wait_for_capacity_timeout = "20m"
   depends_on = [
     aws_lb_target_group.gwlb_tg,
-    aws_cloudwatch_event_rule.cw_rule,
-    aws_lambda_function.lambda,
-    aws_lambda_permission.event_bridge,
-    aws_cloudwatch_event_target.cw_lambda_target
+    # aws_cloudwatch_event_rule.cw_rule,
+    # aws_lambda_function.lambda,
+    # aws_lambda_permission.event_bridge,
+    # aws_cloudwatch_event_target.cw_lambda_target
   ]
   tag {
     key                 = "Name"
