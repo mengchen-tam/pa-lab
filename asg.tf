@@ -77,30 +77,30 @@ resource "aws_autoscaling_group" "myasg" {
 
 ### PAVM: ASG Scaling Policies ###
 
-# resource "aws_autoscaling_policy" "panSessionUtilization" {
-#   autoscaling_group_name = aws_autoscaling_group.myasg.name
-#   name                   = "panSessionUtilization"
-#   policy_type            = "TargetTrackingScaling"
-#   target_tracking_configuration {
-#     target_value = 50
-#     customized_metric_specification {
-#       metric_name = "panSessionUtilization"
-#       namespace   = "VMseries"
-#       statistic   = "Average"
-#     }
-#   }
-# }
+resource "aws_autoscaling_policy" "panSessionUtilization" {
+  autoscaling_group_name = aws_autoscaling_group.myasg.name
+  name                   = "panSessionUtilization"
+  policy_type            = "TargetTrackingScaling"
+  target_tracking_configuration {
+    target_value = 50
+    customized_metric_specification {
+      metric_name = "panSessionUtilization"
+      namespace   = "VMseries"
+      statistic   = "Average"
+    }
+  }
+}
 
-# resource "aws_autoscaling_policy" "DataPlaneCPUUtilizationPct" {
-#   autoscaling_group_name = aws_autoscaling_group.myasg.name
-#   name                   = "DataPlaneCPUUtilizationPct"
-#   policy_type            = "TargetTrackingScaling"
-#   target_tracking_configuration {
-#     target_value = 50
-#     customized_metric_specification {
-#       metric_name = "DataPlaneCPUUtilizationPct"
-#       namespace   = "VMseries"
-#       statistic   = "Average"
-#     }
-#   }
-# }
+resource "aws_autoscaling_policy" "DataPlaneCPUUtilizationPct" {
+  autoscaling_group_name = aws_autoscaling_group.myasg.name
+  name                   = "DataPlaneCPUUtilizationPct"
+  policy_type            = "TargetTrackingScaling"
+  target_tracking_configuration {
+    target_value = 50
+    customized_metric_specification {
+      metric_name = "DataPlaneCPUUtilizationPct"
+      namespace   = "VMseries"
+      statistic   = "Average"
+    }
+  }
+}
