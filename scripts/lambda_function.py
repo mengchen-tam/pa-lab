@@ -31,7 +31,7 @@ except ClientError as e:
     raise Exception(message)
 
 def send_lifecycle_action(event, result):
-
+ 
     try:
 
         response = autoscaling.complete_lifecycle_action(

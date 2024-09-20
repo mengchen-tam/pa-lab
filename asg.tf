@@ -6,9 +6,9 @@ resource "aws_launch_template" "tmpl" {
   instance_type = "m5.large"
   key_name      = var.key_name
   user_data     = filebase64("${path.module}/scripts/userdata.sh")
-  # iam_instance_profile {
-  #   name = aws_iam_instance_profile.pavm_cw_profile.name
-  # }
+  iam_instance_profile {
+    name = aws_iam_instance_profile.pavm_cw_profile.name
+  }
   network_interfaces {
     associate_public_ip_address = false
     device_index                = 0
@@ -40,18 +40,18 @@ resource "aws_autoscaling_group" "myasg" {
   health_check_type         = "EC2"
   force_delete              = true
   target_group_arns         = [aws_lb_target_group.gwlb_tg.arn]
-  # initial_lifecycle_hook {
-  #   name                 = "launch"
-  #   default_result       = "ABANDON"
-  #   heartbeat_timeout    = 300
-  #   lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
-  # }
-  # initial_lifecycle_hook {
-  #   name                 = "terminate"
-  #   default_result       = "ABANDON"
-  #   heartbeat_timeout    = 300
-  #   lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
-  # }
+  initial_lifecycle_hook {
+    name                 = "launch"
+    default_result       = "ABANDON"
+    heartbeat_timeout    = 300
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+  }
+  initial_lifecycle_hook {
+    name                 = "terminate"
+    default_result       = "ABANDON"
+    heartbeat_timeout    = 300
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
+  }
   launch_template {
     id      = aws_launch_template.tmpl.id
     version = "$Latest"
