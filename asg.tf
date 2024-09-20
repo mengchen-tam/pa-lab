@@ -34,7 +34,7 @@ resource "aws_launch_template" "tmpl" {
 
 resource "aws_autoscaling_group" "myasg" {
   name                      = "myasg"
-  max_size                  = 2
+  max_size                  = 3
   min_size                  = 2
   health_check_grace_period = 1800
   health_check_type         = "EC2"
@@ -61,13 +61,13 @@ resource "aws_autoscaling_group" "myasg" {
     delete = "20m"
   }
   wait_for_capacity_timeout = "20m"
-  # depends_on = [
-  #   aws_lb_target_group.gwlb_tg,
-    # aws_cloudwatch_event_rule.cw_rule,
-    # aws_lambda_function.lambda,
-    # aws_lambda_permission.event_bridge,
-    # aws_cloudwatch_event_target.cw_lambda_target
-  # ]
+  depends_on = [
+    aws_lb_target_group.gwlb_tg,
+    aws_cloudwatch_event_rule.cw_rule,
+    aws_lambda_function.lambda,
+    aws_lambda_permission.event_bridge,
+    aws_cloudwatch_event_target.cw_lambda_target
+  ]
   tag {
     key                 = "Name"
     value               = "pavm"
