@@ -67,7 +67,7 @@ resource "aws_autoscaling_group" "myasg" {
     # aws_lambda_function.lambda,
     # aws_lambda_permission.event_bridge,
     # aws_cloudwatch_event_target.cw_lambda_target
-  ]
+  # ]
   tag {
     key                 = "Name"
     value               = "pavm"
