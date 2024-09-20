@@ -23,11 +23,13 @@ The main differences:
 ![](./pa_asg_gwlb.png)
 
 # 实验初始化步骤
+#### 如果实验环境==还没有==部署请从这里开始
 1. 使用邮件中附带的key和IP地址登录到EC2上
 2. 进入实验文件夹`ludus-elb-GWLB-lab`
 3. 使用`aws s3 ls`检查权限是否有效
 4. `terraform init` 初始化terraform 配置
 5. `terraform apply` 开始部署基础资源（VPC, EC2, route table...) 
+#### 如果实验环境==已经==部署请从这里开始
 6. 使用邮件中附带的user登录控制台检查资源
 
 * EC列表
@@ -46,7 +48,7 @@ The main differences:
 ![](./image/EIP_associate.png)
 
 8. 等poc-fw两个实例创建完成，使用key登录SSH 登录到Palo Alto的实例: 
-   `ssh -i “<key.pem>” admin@<EIP>`
+   `ssh -i “~/.ssh/ludus-elb-key.pem” admin@<EIP>`
    ![](./image/ssh_fw.png)
 
 9. 复制scripts/init_configuration的内容到CLI里（第一遍会有报错，可以粘贴2次），用于**输入新管理员密码**并且初始化配置，然后输入commit并回车。 
@@ -59,18 +61,29 @@ The main differences:
 11. 现在所有的资源都创建成功了，实验者也可以通过网页访问2台防火墙的https://<EIP>, 并且使用刚刚修改的管理员密码登录
     
 
-# GWLB路由添加
+# GWLB路由学习
+### 登录Spoke EC2
+Spoke EC2可以通过System Manager登录
+点击EC2, instances, spoke_vpc_vm_az2的Instance ID, 然后点击右上角的Connect, 选择Session Manager Table, 点击Connect
+       ![](./image/ec2_session_manager.png)
+
+之后可以进入EC2控制台尝试`ping www.baidu.com `
+### 添加缺失的路由
 Terrafrom的运行环境中只建立了路由表而没有路由，因此我们需要初步添加路由，将全链路打通
-步骤：
+`进入路由表的方式有很多种，推荐使用VPC 的Resource Map, 点击对应的subnet以后点击高亮的路由表进行修改。`
+
+![Spoke_vpc](./image/spoke_vpc.png)
+==下面大概描述了架构图中每个数字所在缺失的路由，请实验者对照架构图中的拓扑添加所有的路由条目。==
 1. From Spoke VPC to anywhere
-2. From TGW to anywhere
-3. From TGW to Spoke VPC
+2. From TGW to anywhere (TGW route table)
+3. From TGW to Spoke VPC (TGW route table)
 4. From TGW subnet to anywhere via GWLB(two AZs)
 5. For Data going to Internet via NATGW(two AZs)
 6. For Data coming from Internet to Spoke VPC via NATGW(two AZs)
 7. For Data comming from Internet to Spoke VPC Via GWLBe1
 8. For Data comming from Internet to Spoke VPC Via GWLBe2
-   
+![Architecture](./image/architecture.png)
+
 # Troubleshooting 
 ## 没有订阅
 如果没有订阅Palo Alto Market Place AMI, Terraform 会报如下错误. 可以请实验讲师检查订阅PAN-OS 11.0.2。

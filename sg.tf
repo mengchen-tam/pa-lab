@@ -60,8 +60,8 @@ resource "aws_security_group" "spoke" {
   vpc_id      = aws_vpc.spoke_vpc.id
   egress {
     cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 443
-    to_port     = 443
+    from_port   = 0
+    to_port     = 0
     protocol    = "tcp"
   }
   tags = {
