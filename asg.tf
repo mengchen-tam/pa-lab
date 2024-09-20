@@ -34,24 +34,24 @@ resource "aws_launch_template" "tmpl" {
 
 resource "aws_autoscaling_group" "myasg" {
   name                      = "myasg"
-  max_size                  = 4
+  max_size                  = 2
   min_size                  = 2
   health_check_grace_period = 1800
   health_check_type         = "EC2"
   force_delete              = true
   target_group_arns         = [aws_lb_target_group.gwlb_tg.arn]
-  initial_lifecycle_hook {
-    name                 = "launch"
-    default_result       = "ABANDON"
-    heartbeat_timeout    = 300
-    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
-  }
-  initial_lifecycle_hook {
-    name                 = "terminate"
-    default_result       = "ABANDON"
-    heartbeat_timeout    = 300
-    lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
-  }
+  # initial_lifecycle_hook {
+  #   name                 = "launch"
+  #   default_result       = "ABANDON"
+  #   heartbeat_timeout    = 300
+  #   lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+  # }
+  # initial_lifecycle_hook {
+  #   name                 = "terminate"
+  #   default_result       = "ABANDON"
+  #   heartbeat_timeout    = 300
+  #   lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
+  # }
   launch_template {
     id      = aws_launch_template.tmpl.id
     version = "$Latest"
@@ -61,8 +61,8 @@ resource "aws_autoscaling_group" "myasg" {
     delete = "20m"
   }
   wait_for_capacity_timeout = "20m"
-  depends_on = [
-    aws_lb_target_group.gwlb_tg,
+  # depends_on = [
+  #   aws_lb_target_group.gwlb_tg,
     # aws_cloudwatch_event_rule.cw_rule,
     # aws_lambda_function.lambda,
     # aws_lambda_permission.event_bridge,
@@ -77,30 +77,30 @@ resource "aws_autoscaling_group" "myasg" {
 
 ### PAVM: ASG Scaling Policies ###
 
-resource "aws_autoscaling_policy" "panSessionUtilization" {
-  autoscaling_group_name = aws_autoscaling_group.myasg.name
-  name                   = "panSessionUtilization"
-  policy_type            = "TargetTrackingScaling"
-  target_tracking_configuration {
-    target_value = 50
-    customized_metric_specification {
-      metric_name = "panSessionUtilization"
-      namespace   = "VMseries"
-      statistic   = "Average"
-    }
-  }
-}
+# resource "aws_autoscaling_policy" "panSessionUtilization" {
+#   autoscaling_group_name = aws_autoscaling_group.myasg.name
+#   name                   = "panSessionUtilization"
+#   policy_type            = "TargetTrackingScaling"
+#   target_tracking_configuration {
+#     target_value = 50
+#     customized_metric_specification {
+#       metric_name = "panSessionUtilization"
+#       namespace   = "VMseries"
+#       statistic   = "Average"
+#     }
+#   }
+# }
 
-resource "aws_autoscaling_policy" "DataPlaneCPUUtilizationPct" {
-  autoscaling_group_name = aws_autoscaling_group.myasg.name
-  name                   = "DataPlaneCPUUtilizationPct"
-  policy_type            = "TargetTrackingScaling"
-  target_tracking_configuration {
-    target_value = 50
-    customized_metric_specification {
-      metric_name = "DataPlaneCPUUtilizationPct"
-      namespace   = "VMseries"
-      statistic   = "Average"
-    }
-  }
-}
+# resource "aws_autoscaling_policy" "DataPlaneCPUUtilizationPct" {
+#   autoscaling_group_name = aws_autoscaling_group.myasg.name
+#   name                   = "DataPlaneCPUUtilizationPct"
+#   policy_type            = "TargetTrackingScaling"
+#   target_tracking_configuration {
+#     target_value = 50
+#     customized_metric_specification {
+#       metric_name = "DataPlaneCPUUtilizationPct"
+#       namespace   = "VMseries"
+#       statistic   = "Average"
+#     }
+#   }
+# }
