@@ -54,7 +54,7 @@ resource "aws_ec2_transit_gateway_route_table" "spoke" {
 # Routes 
 
 resource "aws_ec2_transit_gateway_route" "spoke_rt" {
-  destination_cidr_block         = "0.0.0.0/0"
+  destination_cidr_block         = aws_vpc.inspect_vpc.cidr_block
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.spoke.id
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.inspection.id
 }
