@@ -81,8 +81,7 @@ resource "aws_route_table" "tgw_attach_subnet_az1" {
 
 
 resource "aws_route_table_association" "tgw_attach_subnet_rt_az1" {
-  count          = length([for subnet in aws_subnet.tgw_attach_subnet : subnet.id])
-  subnet_id      = sort(aws_subnet.tgw_attach_subnet.*.id)[0]
+  subnet_id      = aws_subnet.tgw_attach_subnet.*.id[0]
   route_table_id = aws_route_table.tgw_attach_subnet_az1.id
 }
 
@@ -98,8 +97,7 @@ resource "aws_route_table" "tgw_attach_subnet_az2" {
 }
 
 resource "aws_route_table_association" "tgw_attach_subnet_rt_az2" {
-  count          = length([for subnet in aws_subnet.tgw_attach_subnet : subnet.id])
-  subnet_id      = sort(aws_subnet.tgw_attach_subnet.*.id)[1]
+  subnet_id      = aws_subnet.tgw_attach_subnet.*.id[1]
   route_table_id = aws_route_table.tgw_attach_subnet_az2.id
 }
 
