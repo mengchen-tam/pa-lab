@@ -62,11 +62,6 @@ The main differences:
     
 
 # GWLB路由学习
-### 登录Spoke EC2
-Spoke EC2可以通过System Manager登录
-点击EC2, instances, spoke_vpc_vm_az2的Instance ID, 然后点击右上角的Connect, 选择Session Manager Table, 点击Connect
-       ![](./image/ec2_session_manager.png)
-
 之后可以进入EC2控制台尝试`ping www.baidu.com `
 ### 添加缺失的路由
 Terrafrom的运行环境中只建立了路由表而没有路由，因此我们需要初步添加路由，将全链路打通
@@ -83,6 +78,12 @@ Terrafrom的运行环境中只建立了路由表而没有路由，因此我们�
 7. For Data comming from Internet to Spoke VPC Via GWLBe1
 8. For Data comming from Internet to Spoke VPC Via GWLBe2
 ![Architecture](./image/architecture.png)
+
+### 登录Spoke EC2
+Spoke EC2可以通过System Manager登录
+点击EC2, instances, spoke_vpc_vm_az2的Instance ID, 然后点击右上角的Connect, 选择Session Manager Table, 点击Connect。
+       ![](./image/ec2_session_manager.png)
+如果显示SSM Agent not online，可能是路由条目还缺失。
 
 # Troubleshooting 
 ## 没有订阅

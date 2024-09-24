@@ -154,32 +154,61 @@ resource "aws_route_table_association" "data_subnet_rt_az2" {
 
 #### NAT GATEWAY  Subnet Routes - Inspection VPC ####
 
-resource "aws_route_table" "ngw_subnet" {
+resource "aws_route_table" "ngw_subnet_az1" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    "Name" = "ngw_subnet_rtb"
+    "Name" = "ngw_subnet_az1_rtb"
   }
 }
 
-resource "aws_route" "r1" {
-  route_table_id         = aws_route_table.ngw_subnet.id
+resource "aws_route" "ngw_subnet_az1_r1" {
+  route_table_id         = aws_route_table.ngw_subnet_az1.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw.id
-  depends_on             = [aws_route_table.ngw_subnet]
+  depends_on             = [aws_route_table.ngw_subnet_az1]
 }
 
 # resource "aws_route" "r2" {
 #   count                  = length(aws_subnet.app_subnet.*.id)
-#   route_table_id         = aws_route_table.ngw_subnet.id
+#   route_table_id         = aws_route_table.ngw_subnet_az1.id
 #   destination_cidr_block = sort(aws_subnet.app_subnet.*.cidr_block)[count.index]
 #   vpc_endpoint_id        = aws_vpc_endpoint.gwlb_ep.*.id[count.index]
-#   depends_on             = [aws_route_table.ngw_subnet]
+#   depends_on             = [aws_route_table.ngw_subnet_az1]
 # }
 
 
-resource "aws_route_table_association" "ngw_subnet_rt" {
-  count          = length(aws_subnet.pavm_mgmt_subnet.*.id)
-  subnet_id      = aws_subnet.pavm_mgmt_subnet[count.index].id
-  route_table_id = aws_route_table.ngw_subnet.id
+resource "aws_route_table_association" "ngw_subnet_az1_rt" {
+  subnet_id      = aws_subnet.pavm_mgmt_subnet[0].id
+  route_table_id = aws_route_table.ngw_subnet_az1.id
 }
+
+resource "aws_route_table" "ngw_subnet_az2" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    "Name" = "ngw_subnet_az2_rtb"
+  }
+}
+
+resource "aws_route" "ngw_subnet_az2_r1" {
+  route_table_id         = aws_route_table.ngw_subnet_az2.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+  depends_on             = [aws_route_table.ngw_subnet_az2]
+}
+
+# resource "aws_route" "r2" {
+#   count                  = length(aws_subnet.app_subnet.*.id)
+#   route_table_id         = aws_route_table.ngw_subnet_az1.id
+#   destination_cidr_block = sort(aws_subnet.app_subnet.*.cidr_block)[count.index]
+#   vpc_endpoint_id        = aws_vpc_endpoint.gwlb_ep.*.id[count.index]
+#   depends_on             = [aws_route_table.ngw_subnet_az1]
+# }
+
+
+resource "aws_route_table_association" "ngw_subnet_az2_rt" {
+  subnet_id      = aws_subnet.pavm_mgmt_subnet[1].id
+  route_table_id = aws_route_table.ngw_subnet_az2.id
+}
+
