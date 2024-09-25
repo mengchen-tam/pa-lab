@@ -20,13 +20,13 @@ The main differences:
 
 # 架构图
 
-![](./pa_asg_gwlb.png)
+![](./image/architecture.png)
 
 # 实验初始化步骤
 #### 如果实验环境==还没有==部署请从这里开始
 1. 使用邮件中附带的key和IP地址登录到EC2上
-2. 进入实验文件夹`ludus-elb-GWLB-lab`
-3. 使用`aws s3 ls`检查权限是否有效
+2. 进入实验文件夹`pa-lab`
+3. 使用`aws ec2 describe-route-tables`检查权限是否有效
 4. `terraform init` 初始化terraform 配置
 5. `terraform apply` 开始部署基础资源（VPC, EC2, route table...) 
 #### 如果实验环境==已经==部署请从这里开始
@@ -48,10 +48,10 @@ The main differences:
 ![](./image/EIP_associate.png)
 
 8. 等poc-fw两个实例创建完成，使用key登录SSH 登录到Palo Alto的实例: 
-   `ssh -i “~/.ssh/ludus-elb-key.pem” admin@<EIP>`
+   `ssh -i ~/.ssh/ludus-elb-key.pem admin@<EIP>`
    ![](./image/ssh_fw.png)
 
-9. 复制scripts/init_configuration的内容到CLI里（第一遍会有报错，可以粘贴2次），用于**输入新管理员密码**并且初始化配置，然后输入commit并回车。 
+9. 复制scripts/init_configuration的内容到CLI里，用于初始化配置并且**输入新管理员密码**，然后输入commit并回车应用更改。 
    ![](./image/config_fw.png)
 
 10. 修改mgmt_sg允许操作者电脑的Public IP通过https访问
@@ -62,7 +62,7 @@ The main differences:
     
 
 # GWLB路由学习
-之后可以进入EC2控制台尝试`ping www.baidu.com `
+之后可以进入EC2控制台尝试`ping www.baidu.com`发现无法通信
 ### 添加缺失的路由
 Terrafrom的运行环境中只建立了路由表而没有路由，因此我们需要初步添加路由，将全链路打通
 `进入路由表的方式有很多种，推荐使用VPC 的Resource Map, 点击对应的subnet以后点击高亮的路由表进行修改。`
@@ -75,15 +75,25 @@ Terrafrom的运行环境中只建立了路由表而没有路由，因此我们�
 4. From TGW subnet to anywhere via GWLB(two AZs)
 5. For Data going to Internet via NATGW(two AZs)
 6. For Data coming from Internet to Spoke VPC via NATGW(two AZs)
-7. For Data comming from Internet to Spoke VPC Via GWLBe1
-8. For Data comming from Internet to Spoke VPC Via GWLBe2
+7. For Data comming from Internet to Spoke VPC Via GWLBe(two AZs)
+
 ![Architecture](./image/architecture.png)
 
 ### 登录Spoke EC2
 Spoke EC2可以通过System Manager登录
-点击EC2, instances, spoke_vpc_vm_az2的Instance ID, 然后点击右上角的Connect, 选择Session Manager Table, 点击Connect。
+点击EC2, instances, spoke_vpc_vm_az1|az2的Instance ID, 然后点击右上角的Connect, 选择Session Manager Table, 点击Connect。
        ![](./image/ec2_session_manager.png)
 如果显示SSM Agent not online，可能是路由条目还缺失。
+
+### 尝试ping和telnet，验证网络访问是否正常
+
+可以尝试安装nmap并使用nping做批量的TCP ping
+```
+sudo yum install nmap -y
+nping --tcp-connect -p 80 www.baidu.com -c 50
+```
+### 登录防火墙WebGui, 通过minitor -> log -> traffic查看流量
+
 
 # Troubleshooting 
 ## 没有订阅
