@@ -16,7 +16,7 @@ The main differences:
 2.	通过TGW将流量传递到Inspection VPC检查以后再发往目的地
 3.	通过实验，手工添加路由表，熟悉GWLB方案中路由表的构建
 4.	如果使用Terraform快速部署防火墙实例，VPC, TGW， GWLB以及其他相关资源
-5.  本实验将不涉及ASG扩缩容部分
+5. 本实验将不涉及ASG扩缩容部分
 
 # 架构图
 
@@ -107,3 +107,13 @@ nping --tcp-connect -p 80 www.baidu.com -c 50
 │   on modules/aws_ec2_vpc/asg.tf line 59, in resource "aws_autoscaling_group" "myasg":
 │   59: resource "aws_autoscaling_group" "myasg" {
 ```
+
+## Decommission
+使用`terraform destory`清除资源时，会碰到错误
+`?
+¦ Error: deleting EC2 VPC Endpoint (vpce-05c830cc947f10fb9): vpce-05c830cc947f10fb9: api error InvalidParameter: Endpoint must be removed from route table before deletion
+¦
+¦
+?
+`
+再次运行一遍`terraform destory`即可
